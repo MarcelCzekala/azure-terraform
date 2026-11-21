@@ -1,2 +1,4 @@
 # przykladowy plik konfiguracyjny do repozytorium
 subscription_id = "00000000-0000-0000-0000-000000000000"
+
+db_password = "zmien_na_wlasne_haslo"

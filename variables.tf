@@ -59,3 +59,34 @@ variable "ssh_public_key_path" {
   description = "Sciezka do klucza publicznego"
   default     = "~/.ssh/id_rsa.pub"
 }
+
+# nazwa bazy danych wordpressa
+variable "db_name" {
+  type        = string
+  description = "Nazwa bazy danych"
+  default     = "wordpress"
+}
+
+# uzytkownik bazy danych
+variable "db_user" {
+  type        = string
+  description = "Nazwa uzytkownika bazy danych"
+  default     = "wpuser"
+}
+
+# haslo do bazy danych
+variable "db_password" {
+  type        = string
+  description = "Haslo uzytkownika bazy danych"
+  sensitive   = true
+}
+
+# wspolne tagi dla zasobow
+variable "tags" {
+  type        = map(string)
+  description = "Wspolne tagi przypisywane do zasobow"
+  default = {
+    Projekt    = "Praca-Inzynierska"
+    Srodowisko = "Test"
+  }
+}

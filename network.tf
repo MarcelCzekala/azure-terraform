@@ -2,11 +2,7 @@
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
-
-  tags = {
-    Projekt    = "Praca-Inzynierska"
-    Srodowisko = "Test"
-  }
+  tags     = var.tags
 }
 
 # wirtualna siec dla maszyn
@@ -15,11 +11,7 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   address_space       = [var.vnet_cidr]
-
-  tags = {
-    Projekt    = "Praca-Inzynierska"
-    Srodowisko = "Test"
-  }
+  tags                = var.tags
 }
 
 # publiczna podsiec serwera web
@@ -45,9 +37,5 @@ resource "azurerm_public_ip" "pip_web" {
   location            = azurerm_resource_group.rg.location
   allocation_method   = "Static"
   sku                 = "Standard"
-
-  tags = {
-    Projekt    = "Praca-Inzynierska"
-    Srodowisko = "Test"
-  }
+  tags                = var.tags
 }

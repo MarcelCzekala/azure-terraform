@@ -30,11 +30,7 @@ resource "azurerm_network_security_group" "nsg_web" {
     destination_address_prefix = "*"
   }
 
-  tags = {
-    Projekt    = "Praca-Inzynierska"
-    Warstwa    = "Web-Security"
-    Srodowisko = "Test"
-  }
+  tags = var.tags
 }
 
 # przypiecie nsg do podsieci web
@@ -88,11 +84,7 @@ resource "azurerm_network_security_group" "nsg_db" {
     destination_address_prefix = "*"
   }
 
-  tags = {
-    Projekt    = "Praca-Inzynierska"
-    Warstwa    = "DB-Security"
-    Srodowisko = "Test"
-  }
+  tags = var.tags
 }
 
 # przypiecie nsg do podsieci bazy

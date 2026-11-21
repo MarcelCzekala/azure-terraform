@@ -14,10 +14,7 @@ resource "azurerm_network_interface" "nic_web" {
     public_ip_address_id          = azurerm_public_ip.pip_web.id
   }
 
-  tags = {
-    Projekt    = "Praca-Inzynierska"
-    Srodowisko = "Test"
-  }
+  tags = var.tags
 }
 
 # maszyna wirtualna serwera web
@@ -31,6 +28,15 @@ resource "azurerm_linux_virtual_machine" "vm_web" {
   network_interface_ids = [
     azurerm_network_interface.nic_web.id
   ]
+
+  # skrypt startowy z dockerem i wordpressem
+  custom_data = base64encode(templatefile("${path.module}/scripts/cloud-init-web.tftpl", {
+    admin_username = var.admin_username
+    db_host        = azurerm_network_interface.nic_db.private_ip_address
+    db_name        = var.db_name
+    db_user        = var.db_user
+    db_password    = var.db_password
+  }))
 
   admin_ssh_key {
     username   = var.admin_username
@@ -49,11 +55,7 @@ resource "azurerm_linux_virtual_machine" "vm_web" {
     version   = "latest"
   }
 
-  tags = {
-    Projekt    = "Praca-Inzynierska"
-    Warstwa    = "Web"
-    Srodowisko = "Test"
-  }
+  tags = var.tags
 }
 
 # karta sieciowa serwera bazy
@@ -69,10 +71,7 @@ resource "azurerm_network_interface" "nic_db" {
     private_ip_address            = "10.0.2.4"
   }
 
-  tags = {
-    Projekt    = "Praca-Inzynierska"
-    Srodowisko = "Test"
-  }
+  tags = var.tags
 }
 
 # maszyna wirtualna bazy danych
@@ -104,9 +103,5 @@ resource "azurerm_linux_virtual_machine" "vm_db" {
     version   = "latest"
   }
 
-  tags = {
-    Projekt    = "Praca-Inzynierska"
-    Warstwa    = "Database"
-    Srodowisko = "Test"
-  }
+  tags = var.tags
 }
