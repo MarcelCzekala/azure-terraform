@@ -1,4 +1,8 @@
 # przykladowy plik konfiguracyjny do repozytorium
 subscription_id = "00000000-0000-0000-0000-000000000000"
 
-db_password = "zmien_na_wlasne_haslo"
+# przykladowe dane dostepowe bazy danych
+db_name          = "wordpress"
+db_user          = "wpuser"
+db_password      = "CHANGE_ME_STRONG_PASSWORD"
+db_root_password = "CHANGE_ME_STRONG_ROOT_PASSWORD"

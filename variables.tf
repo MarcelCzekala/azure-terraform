@@ -64,20 +64,25 @@ variable "ssh_public_key_path" {
 variable "db_name" {
   type        = string
   description = "Nazwa bazy danych"
-  default     = "wordpress"
 }
 
 # uzytkownik bazy danych
 variable "db_user" {
   type        = string
   description = "Nazwa uzytkownika bazy danych"
-  default     = "wpuser"
 }
 
 # haslo do bazy danych
 variable "db_password" {
   type        = string
   description = "Haslo uzytkownika bazy danych"
+  sensitive   = true
+}
+
+# haslo roota do bazy danych
+variable "db_root_password" {
+  type        = string
+  description = "Haslo administratora root bazy danych"
   sensitive   = true
 }
 

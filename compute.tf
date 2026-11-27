@@ -86,6 +86,15 @@ resource "azurerm_linux_virtual_machine" "vm_db" {
     azurerm_network_interface.nic_db.id
   ]
 
+  # skrypt startowy z dockerem i baza mysql
+  custom_data = base64encode(templatefile("${path.module}/scripts/cloud-init-db.tftpl", {
+    admin_username   = var.admin_username
+    db_root_password = var.db_root_password
+    db_name          = var.db_name
+    db_user          = var.db_user
+    db_password      = var.db_password
+  }))
+
   admin_ssh_key {
     username   = var.admin_username
     public_key = file(pathexpand(var.ssh_public_key_path))

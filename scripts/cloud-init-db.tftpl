@@ -1,0 +1,46 @@
+#!/bin/bash
+set -euo pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+
+# dodanie 2GB pliku swap dla stabilnosci
+if [ ! -f /swapfile ]; then
+  fallocate -l 2G /swapfile || dd if=/dev/zero of=/swapfile bs=1M count=2048
+  chmod 600 /swapfile
+  mkswap /swapfile
+  swapon /swapfile
+  grep -q '^/swapfile ' /etc/fstab || echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+
+# dodanie oficjalnego repozytorium dockera
+apt-get update -y
+apt-get install -y ca-certificates curl gnupg lsb-release
+
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# instalacja i uruchomienie uslugi docker
+apt-get update -y
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+systemctl enable --now docker
+usermod -aG docker "${admin_username}"
+
+# utworzenie wolumenu i uruchomienie mysql
+docker volume create mysql_data
+
+docker run -d \
+  --name mysql \
+  --restart unless-stopped \
+  -p 3306:3306 \
+  -v mysql_data:/var/lib/mysql \
+  -e MYSQL_ROOT_PASSWORD="${db_root_password}" \
+  -e MYSQL_DATABASE="${db_name}" \
+  -e MYSQL_USER="${db_user}" \
+  -e MYSQL_PASSWORD="${db_password}" \
+  mysql:8.0
